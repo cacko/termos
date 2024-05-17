@@ -1,0 +1,53 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  PROJECT: termo-service
+
+tasks:
+  default:
+    cmds:
+      - direnv exec . mamba run --live-stream -n termo-service python -m 'termo_service.cli' {{.CLI_ARGS}}
+    silent: true
+
+  run:
+    desc: systemd exec
+    dir: $WORKDIR
+    cmds:
+      - sudo -u Alex ./run.sh
+
+
+  logs:
+    desc: logs
+    cmds:
+      - tail -f /Users/jago/log/termosvc.log
+
+  restart:
+    desc: restart
+    cmds:
+      - task: stop
+      - sleep 10
+      - task: start
+
+  export:
+    desc: export env
+    cmds:
+      - direnv exec . mamba env export --no-builds -n {{.PROJECT}} > environment.yml
+
+  start:
+    desc: start
+    cmds:
+      - sudo launchctl bootstrap system /Library/LaunchDaemons/net.cacko.termosvc.plist
+
+  stop:
+    desc: stop
+    cmds:
+      - sudo launchctl bootout system/net.cacko.termosvc
+
+  push:
+    desc: commit and pushes current changes
+    cmds:
+      - git add .  || true
+      - gcom || true
+      - git push || true
