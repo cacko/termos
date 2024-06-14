@@ -53,11 +53,11 @@ class TP357(Sensor):
             logging.info(f"connected to {client.address}")
             read = client.services.get_characteristic(app_config.ble.tp357.uuid_read)
             await client.start_notify(read, callback=notification_tp357)
-            try:
-                while client.is_connected:
+            while client.is_connected:
+                try:
                     await asyncio.sleep(0.5)
-            except Exception as e:
-                logging.exception(e)
-                await client.stop_notify(read)
+                except Exception as e:
+                    logging.exception(e)
+                    await client.stop_notify(read)
             await client.disconnect()
             logging.info(f"STOPPING TP")

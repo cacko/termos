@@ -25,6 +25,7 @@ class Server(StoppableThread):
         super().__init__(*args, **kwargs)
 
     def run(self):
+
         asyncio.run(Lametric.update(self.current_data[SensorLocation.INDOOR]))
         while not self.stopped():
             try:

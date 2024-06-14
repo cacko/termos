@@ -11,23 +11,10 @@ tasks:
       - direnv exec . mamba run --live-stream -n termo-service python -m 'termo_service.cli' {{.CLI_ARGS}}
     silent: true
 
-  run:
-    desc: systemd exec
-    dir: $WORKDIR
-    cmds:
-      - ./run.sh
-
   logs:
     desc: logs
     cmds:
-      - tail -f /Users/jago/Library/Logs/net.cacko.termosvc/termosvc.log
-
-  restart:
-    desc: restart
-    cmds:
-      - task: stop
-      - sleep 10
-      - task: start
+      - pm2 logs {{.PROJECT}} 
 
   export:
     desc: export env
@@ -37,16 +24,12 @@ tasks:
   start:
     desc: start
     cmds:
-      - sudo cp net.cacko.termosvc.plist /Library/LaunchDaemons/net.cacko.termosvc.plist
-      - sudo chown root:wheel /Library/LaunchDaemons/net.cacko.termosvc.plist
-      - sudo chmod 644 /Library/LaunchDaemons/net.cacko.termosvc.plist
-      - sudo launchctl bootstrap system /Library/LaunchDaemons/net.cacko.termosvc.plist
+      - pm2 restart {{.PROJECT}} 
 
   stop:
     desc: stop
     cmds:
-      - sudo launchctl stop net.cacko.termosvc
-      - sudo launchctl bootout system/net.cacko.termosvc
+      - pm2 stop {{.PROJECT}} 
 
   push:
     desc: commit and pushes current changes
@@ -54,9 +37,3 @@ tasks:
       - git add .  || true
       - gcom || true
       - git push || true
-
-  run:
-    desc: systemd exec
-    dir: $WORKDIR
-    cmds:
-      - sudo -u Alex ./run.sh
