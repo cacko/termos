@@ -3,7 +3,7 @@
 decode temperature value from byte(2) array
 '''
 
-from enum import Enum, IntEnum
+from enum import IntEnum
 
 
 def tb_decode_temperature(b:bytes) -> float:

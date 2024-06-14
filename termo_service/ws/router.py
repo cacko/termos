@@ -1,4 +1,3 @@
-from enum import StrEnum
 from fastapi import (
     APIRouter,
     WebSocket,
@@ -6,11 +5,7 @@ from fastapi import (
 )
 import logging
 from fastapi.websockets import WebSocketState
-from pydantic import BaseModel, Field
-from typing import Optional
-from pathlib import Path
 import asyncio
-import time
 from asyncio.queues import Queue, QueueEmpty
 
 from termo_service.ble.models import NowData, SensorLocation

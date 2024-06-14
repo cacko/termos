@@ -1,8 +1,5 @@
-from ast import Or
 import asyncio
 import logging
-from pathlib import Path
-from queue import Empty
 from asyncio import Queue, QueueEmpty
 from bleak import BleakClient
 from bleak.backends.device import BLEDevice
@@ -39,7 +36,6 @@ def notification_oria(sender: int, data: bytearray):
     match header:
         case TB.QUERY:
             try:
-                Path("~/Desktop/query.data").expanduser().write_bytes(data)
                 query = TBMsgQuery(data)
                 assert query.count > 0
                 Oria.ble_queue.put_nowait(
@@ -50,10 +46,9 @@ def notification_oria(sender: int, data: bytearray):
 
         case TB.DUMP:
             msg = TBMsgDump(data)
-            Path("~/Desktop/dump.data").expanduser().write_bytes(data)
             logging.debug([msg.count, msg.offset, msg.data])
             Oria.ble_queue.put_nowait((TBCmdReset().get_msg(), 10))
-            Oria.ble_queue.put_nowait((TBCmdQuery().get_msg(), 300))
+            Oria.ble_queue.put_nowait((TBCmdQuery().get_msg(), 120))
             nowdata = NowData(
                 temp=msg.data[0].get("t"),
                 humid=msg.data[0].get("h"),
@@ -92,7 +87,6 @@ class Oria(Sensor):
             Oria.queue.put_nowait(
                 StatusChange(status=Status.CONNECTED, location=self.location)
             )
-            self.__class__.clients[self.__class__.__name__] = client
             logging.info(f"connected to {client.address}")
             Oria.ble_queue.put_nowait((TBCmdQuery().get_msg(), 0))
             await client.start_notify(

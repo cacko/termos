@@ -1,6 +1,5 @@
 import yaml
 from pydantic import BaseModel
-from corefile import filepath
 from pathlib import Path
 
 

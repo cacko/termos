@@ -1,14 +1,12 @@
 import asyncio
-from asyncio import BaseEventLoop
 import logging
-from queue import Queue
-from bleak import BleakClient, cli
+from bleak import BleakClient
 from bleak.backends.device import BLEDevice
 from bleak.backends.characteristic import BleakGATTCharacteristic
 from bleak import BleakScanner
 from termo_service.config import app_config
 from termo_service.ble.sensor import Sensor
-from termo_service.ble.models import NowData, SensorLocation, Status, StatusChange
+from termo_service.ble.models import NowData, Status, StatusChange
 
 
 def tp357_result(data: bytearray):
@@ -52,7 +50,6 @@ class TP357(Sensor):
             TP357.queue.put_nowait(
                 StatusChange(status=Status.CONNECTED, location=TP357.location)
             )
-            self.__class__.clients[self.__class__.__name__] = client
             logging.info(f"connected to {client.address}")
             read = client.services.get_characteristic(app_config.ble.tp357.uuid_read)
             await client.start_notify(read, callback=notification_tp357)
@@ -62,4 +59,5 @@ class TP357(Sensor):
             except Exception as e:
                 logging.exception(e)
                 await client.stop_notify(read)
+            await client.disconnect()
             logging.info(f"STOPPING TP")

@@ -2,7 +2,6 @@ import asyncio
 import logging
 from queue import Empty, Queue
 from time import sleep
-from typing import Optional
 from corethread import StoppableThread
 
 from termo_service.ble.models import NowData, SensorLocation, Status, StatusChange

@@ -4,7 +4,6 @@ import logging
 from queue import Queue
 from typing import Any
 from corethread import StoppableThread
-from bleak import BleakClient
 from termo_service.ble.models import SensorLocation
 
 class SensorMeta(type):
@@ -13,7 +12,6 @@ class SensorMeta(type):
     queues: dict[str, Queue] = {}
     notifiers: dict[str, asyncio.Future] = {}
     threads: dict[str, StoppableThread] = {}
-    clients: dict[str, BleakClient]= {}
 
     def __call__(cls, *args: Any, **kwds: Any) -> Any:
         k = cls.__name__
@@ -46,8 +44,6 @@ class SensorMeta(type):
 
     def stop(cls):
         try:
-            assert cls.clients[cls.__name__]
-            asyncio.run(cls.clients[cls.__name__].disconnect())
             cls.stop_notify()
         except Exception:
             pass
@@ -63,3 +59,4 @@ class SensorMeta(type):
 class Sensor(object, metaclass=SensorMeta):
     
     location: SensorLocation
+    
