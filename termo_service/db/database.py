@@ -3,7 +3,7 @@ from playhouse.postgres_ext import PostgresqlExtDatabase
 from typing import Optional, Any
 import os
 from peewee import OperationalError
-
+from termo_service.config import app_config
 
 class ReconnectingDB(PostgresqlExtDatabase):
     
@@ -31,7 +31,7 @@ class DatabaseMeta(type):
 class Database(object, metaclass=DatabaseMeta):
 
     def __init__(self):
-        parsed = parse(os.environ.get("DB_URL"))
+        parsed = parse(app_config.db.url)
         self.__db = ReconnectingDB(**parsed)
 
     def get_db(self) -> ReconnectingDB:

@@ -27,12 +27,16 @@ class BleConfig(BaseModel):
 class BleDevices(BaseModel):
     tp357: BleConfig
     oria: BleConfig
+    
+class DbConfig(BaseModel):
+    url: str
 
 
 class AppConfig(BaseModel):
     lametric: LametricConfig
     firebase: FirebaseConfig
     ble: BleDevices
+    db: DbConfig
 
 
 config_root = Path(__file__).parent / "settings.yaml"
