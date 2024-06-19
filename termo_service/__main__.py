@@ -48,6 +48,7 @@ async def lifespan(app: FastAPI):
     Oria.start_notify()
     yield
     logging.info("lifespan")
+    raise RuntimeError
 
 
 def create_app():

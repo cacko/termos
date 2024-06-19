@@ -1,3 +1,4 @@
+import logging
 from playhouse.db_url import parse
 from playhouse.postgres_ext import PostgresqlExtDatabase
 from typing import Optional, Any
@@ -11,8 +12,7 @@ class ReconnectingDB(PostgresqlExtDatabase):
         try:
             return super().execute_sql(sql, params, commit)
         except OperationalError as e:
-            print(e)
-            raise RuntimeError
+            logging.error(e)
 
 
 class DatabaseMeta(type):
