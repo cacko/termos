@@ -24,12 +24,20 @@ tasks:
   start:
     desc: start
     cmds:
-      - pm2 restart {{.PROJECT}} 
+      - sudo launchctl start net.cacko.termoservice
 
   stop:
     desc: stop
     cmds:
-      - pm2 stop {{.PROJECT}} 
+      - sudo launchctl stop net.cacko.termoservice
+
+
+  restart:
+    desc: stop
+    cmds:
+      - sudo launchctl stop net.cacko.termoservice
+      - sleep 10
+      - sudo launchctl start net.cacko.termoservice
 
   push:
     desc: commit and pushes current changes
@@ -37,3 +45,9 @@ tasks:
       - git add .  || true
       - gcom || true
       - git push || true
+
+  run:
+    desc: systemd exec
+    dir: $WORKDIR
+    cmds:
+      - ./run.sh

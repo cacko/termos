@@ -1,5 +1,5 @@
-from email.policy import default
 from enum import StrEnum
+import logging
 from termo_service.api.models import DataResponse
 from termo_service.ble.models import SensorLocation
 from termo_service.db.fields import LocationField
@@ -8,7 +8,6 @@ from termo_service.db.database import Database
 from peewee import FloatField, DateTimeField, fn
 from playhouse.shortcuts import model_to_dict
 from datetime import timezone, datetime, timedelta
-import pytz
 
 
 class PeriodChunk(StrEnum):
@@ -38,36 +37,41 @@ class Data(DbModel):
     def get_period(
         cls, chunk: PeriodChunk, location: SensorLocation
     ) -> list[DataResponse]:
-
+        
         match chunk:
             case PeriodChunk.DAY:
                 interval = timedelta(days=1)
-                truncate = "2 hour"
+                truncate = "1 hour"
+                timestamp = fn.date_bin(truncate, Data.timestamp, fn.now())
             case PeriodChunk.WEEK:
-                interval = timedelta(days=7)
-                truncate = "6 hour"
+                interval = timedelta(days=14)
+                truncate = "1 day"
+                timestamp = fn.date_bin(truncate, Data.timestamp, datetime.now().date())
             case PeriodChunk.HOUR:
                 interval = timedelta(hours=1)
                 truncate = "5 minute"
-
-        timestamp = fn.date_bin(truncate, Data.timestamp, fn.now())
+                timestamp = fn.date_bin(truncate, Data.timestamp, fn.now())
         filters = [
             Data.timestamp >= (datetime.now(timezone.utc) - interval),
             Data.location == location
         ]
 
         query = (
+            
             Data.select(
                 fn.MAX(Data.temp).alias("temp"),
                 fn.MAX(Data.humid).alias("humid"),
+                fn.MIN(Data.temp).alias("temp_min"),
                 timestamp.alias("timestamp"),
                 Data.location
             )
             .where(*filters)
             .group_by(timestamp, Data.location)
             .order_by(timestamp.asc())
+            .dicts()
         )
-        return [r.to_response() for r in query]
+        logging.info([x for x in query])
+        return [DataResponse(**r) for r in query]
 
     def to_response(self, **kwds):
         return DataResponse(

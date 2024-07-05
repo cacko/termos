@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel, AwareDatetime
 from datetime import datetime, timezone
 
@@ -22,3 +23,4 @@ class DataResponse(BaseResponse):
     humid: float
     timestamp: AwareDatetime
     location: SensorLocation
+    temp_min: Optional[float] = None

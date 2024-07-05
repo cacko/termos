@@ -29,7 +29,9 @@ class BleDevices(BaseModel):
     oria: BleConfig
     
 class DbConfig(BaseModel):
-    url: str
+    name: str
+    username: str
+    host: str
 
 
 class AppConfig(BaseModel):

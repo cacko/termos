@@ -2,7 +2,6 @@ import logging
 from time import sleep
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
 from termo_service.api.router import router as api_router
 from termo_service.ble.models import SensorLocation
 from termo_service.ws.router import router as ws_router
@@ -87,8 +86,3 @@ def handler_stop_signals(signum, frame):
 
 signal.signal(signal.SIGINT, handler_stop_signals)
 signal.signal(signal.SIGTERM, handler_stop_signals)
-
-
-uvicorn.run(
-    app=create_app(), port=23727, host="0.0.0.0", loop="uvloop", use_colors=True
-)
