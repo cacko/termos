@@ -3,6 +3,10 @@ from typing import Optional
 from pydantic import BaseModel, Field
 from datetime import datetime, timezone
 
+class SensorType(StrEnum):
+    TP357 = "tp357"
+    ORIA = "oria"
+
 class Status(StrEnum):
     CONNECTED = "connected"
     DISCONNECTED = "disconnected"

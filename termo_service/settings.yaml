@@ -1,7 +1,7 @@
 lametric:
   headers:
     x-device: 64.2.A.2.103
-  base_url: http://127.0.0.1:32321/api/
+  base_url: http://192.168.0.105:32321/api/
   endpoints:
     nowdata: termo
 firebase:
@@ -9,17 +9,27 @@ firebase:
   rdb_host: https://termo-4737a-default-rtdb.europe-west1.firebasedatabase.app/
 db:
   name: termo
-  host: 127.0.0.1
+  host: 192.168.0.10
   username: jago
-ble:
-  tp357:
-    mac: c4:5a:11:b4:53:19
-    address: E18B152D-E13D-4FB6-B1F6-72C620625F27
-    uuid_write: 00010203-0405-0607-0809-0a0b0c0d2b11
-    uuid_read: 00010203-0405-0607-0809-0a0b0c0d2b10
-
-  oria:
-    mac: c5:d8:00:00:15:49
-    address: 48360724-B4C4-8071-4EB2-CBAB5AFFDBA5
+devices:
+  # -
+  #   mac: c4:5a:11:b4:53:19
+  #   address: E18B152D-E13D-4FB6-B1F6-72C620625F27
+  #   uuid_write: 00010203-0405-0607-0809-0a0b0c0d2b11
+  #   uuid_read: 00010203-0405-0607-0809-0a0b0c0d2b10
+  #   sensor_type: tp357
+  #   location: indoor
+  -
+    mac: 50:4a:00:00:12:f3
+    address: 58F19AD0-673B-9EB5-FD85-05084DBFF00F
     uuid_write: 0000fff5-0000-1000-8000-00805F9B34FB
     uuid_read: 0000fff3-0000-1000-8000-00805F9B34FB
+    sensor_type: oria
+    location: outdoor
+  -
+    mac: 50:7e:00:00:06:1c
+    address: 69733674-301D-62BA-1C48-F4CCAD3F769C
+    uuid_write: 0000fff5-0000-1000-8000-00805F9B34FB
+    uuid_read: 0000fff3-0000-1000-8000-00805F9B34FB
+    sensor_type: oria
+    location: indoor

@@ -5,15 +5,17 @@ from queue import Queue
 from typing import Any
 from corethread import StoppableThread
 from termo_service.ble.models import SensorLocation
+from termo_service.config import BleDeviceConfig
+
 
 class SensorMeta(type):
 
-    instances: dict[str,"Sensor"] = {}
+    instances: dict[str, "Sensor"] = {}
     queues: dict[str, Queue] = {}
     notifiers: dict[str, asyncio.Future] = {}
     threads: dict[str, StoppableThread] = {}
 
-    def __call__(cls, *args: Any, **kwds: Any) -> Any:
+    def __call__(cls, *args: Any, **kwds: Any) -> 'Sensor':
         k = cls.__name__
         if k not in cls.instances:
             cls.instances[k] = type.__call__(cls, *args, **kwds)
@@ -35,7 +37,9 @@ class SensorMeta(type):
 
         cls.threads[cls.__name__] = StoppableThread(target=bleak_thread, args=(loop,))
         cls.threads[cls.__name__].start()
-        cls.notifiers[cls.__name__] = asyncio.run_coroutine_threadsafe(cls().init_notify(), loop)
+        cls.notifiers[cls.__name__] = asyncio.run_coroutine_threadsafe(
+            cls().init_notify(), loop
+        )
         return cls.threads[cls.__name__]
 
     def restart_notify(cls):
@@ -56,7 +60,15 @@ class SensorMeta(type):
         except AssertionError:
             pass
 
+
 class Sensor(object, metaclass=SensorMeta):
-    
+
+    mac: str
+    address: str
+    uuid_read: str
+    uuid_write: str
     location: SensorLocation
-    
+
+        
+    async def init_notify(self):
+        raise NotImplementedError

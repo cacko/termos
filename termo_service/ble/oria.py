@@ -4,7 +4,6 @@ from asyncio import Queue, QueueEmpty
 from bleak import BleakClient
 from bleak.backends.device import BLEDevice
 from bleak import BleakScanner
-from termo_service.config import app_config
 from termo_service.ble.sensor import Sensor
 from termo_service.ble.models import NowData, Status, StatusChange
 from termo_service.ble.oria_protocol import (
@@ -15,6 +14,7 @@ from termo_service.ble.oria_protocol import (
     TB,
     TBMsgDump,
 )
+from bleak.backends.characteristic import BleakGATTCharacteristic
 
 
 def convert_to_readings(response):
@@ -31,39 +31,6 @@ def convert_to_readings(response):
     print(",".join(readings))
 
 
-def notification_oria(sender: int, data: bytearray):
-    header = TB(int(data.hex()[:2]))
-    match header:
-        case TB.QUERY:
-            try:
-                query = TBMsgQuery(data)
-                assert query.count > 0
-                Oria.ble_queue.put_nowait(
-                    (TBCmdDump(start=query.count-1, count=1).get_msg(), 0)
-                )
-            except AssertionError:
-                Oria.ble_queue.put_nowait((TBCmdQuery().get_msg(), 10))
-
-        case TB.DUMP:
-            msg = TBMsgDump(data)
-            logging.debug([msg.count, msg.offset, msg.data])
-            Oria.ble_queue.put_nowait((TBCmdReset().get_msg(), 10))
-            Oria.ble_queue.put_nowait((TBCmdQuery().get_msg(), 120))
-            nowdata = NowData(
-                temp=msg.data[0].get("t"),
-                humid=msg.data[0].get("h"),
-                location=Oria.location,
-            )
-            Oria.queue.put_nowait(nowdata)
-
-
-def disconnect_oria(client: BleakClient):
-    logging.info(f"{client.address} disconnected")
-    Oria.queue.put_nowait(
-        StatusChange(status=Status.DISCONNECTED, location=Oria.location)
-    )
-
-
 class Oria(Sensor):
 
     ble_queue: Queue = Queue()
@@ -75,32 +42,75 @@ class Oria(Sensor):
         while not device:
             devices = await BleakScanner.discover()
             device = next(
-                filter(lambda x: x.address == app_config.ble.oria.address, devices),
+                filter(lambda x: x.address == self.address, devices),
                 None,
             )
         logging.info(f"found device {device.details}")
         return device
 
+    def notification_oria(self, sender: BleakGATTCharacteristic, data: bytearray):
+        header = TB(int(data.hex()[:2]))
+        match header:
+            case TB.QUERY:
+                try:
+                    query = TBMsgQuery(data)
+                    assert query.count > 0
+                    self.ble_queue.put_nowait(
+                        (TBCmdDump(start=query.count - 1, count=1).get_msg(), 0)
+                    )
+                except AssertionError:
+                    self.ble_queue.put_nowait((TBCmdQuery().get_msg(), 10))
+
+            case TB.DUMP:
+                msg = TBMsgDump(data)
+                logging.debug([msg.count, msg.offset, msg.data])
+                Oria.ble_queue.put_nowait((TBCmdReset().get_msg(), 10))
+                Oria.ble_queue.put_nowait((TBCmdQuery().get_msg(), 30))
+                nowdata = NowData(
+                    temp=msg.data[0].get("t"),
+                    humid=msg.data[0].get("h"),
+                    location=self.location,
+                )
+                self.__class__.queue.put_nowait((nowdata, self.__class__))
+
+    def disconnect_oria(self, client: BleakClient):
+        logging.info(f"{client.address} disconnected")
+        self.__class__.queue.put_nowait(
+            (
+                StatusChange(
+                    status=Status.DISCONNECTED,
+                    location=self.location,
+                ),
+                self.__class__,
+            )
+        )
+
     async def init_notify(self):
         device = await self.device
-        async with BleakClient(device, disconnected_callback=disconnect_oria) as client:
-            Oria.queue.put_nowait(
-                StatusChange(status=Status.CONNECTED, location=self.location)
+        async with BleakClient(
+            device, disconnected_callback=self.disconnect_oria
+        ) as client:
+            self.__class__.queue.put_nowait(
+                (
+                    StatusChange(
+                        status=Status.CONNECTED,
+                        location=self.location,
+                    ),
+                    self.__class__,
+                )
             )
             logging.info(f"connected to {client.address}")
             Oria.ble_queue.put_nowait((TBCmdQuery().get_msg(), 0))
-            await client.start_notify(
-                app_config.ble.oria.uuid_read, callback=notification_oria
-            )
+            await client.start_notify(self.uuid_read, callback=self.notification_oria)
             while client.is_connected:
                 try:
-                    cmd, slp = Oria.ble_queue.get_nowait()
+                    cmd, slp = self.ble_queue.get_nowait()
                     await asyncio.sleep(slp)
-                    await client.write_gatt_char(app_config.ble.oria.uuid_write, cmd)
-                    Oria.ble_queue.task_done()
+                    await client.write_gatt_char(self.uuid_write, cmd)
+                    self.ble_queue.task_done()
                 except QueueEmpty:
                     await asyncio.sleep(0.2)
                 except Exception as e:
                     logging.exception(e)
-                    await client.stop_notify(app_config.ble.oria.uuid_read)
+                    await client.stop_notify(self.uuid_read)
             await client.disconnect()

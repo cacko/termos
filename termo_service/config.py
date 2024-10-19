@@ -1,6 +1,9 @@
+from typing import Optional
 import yaml
 from pydantic import BaseModel
 from pathlib import Path
+from stringcase import camelcase
+from termo_service.ble.models import SensorLocation, SensorType
 
 
 class LametricEndPointConfig(BaseModel):
@@ -18,15 +21,18 @@ class FirebaseConfig(BaseModel):
     rdb_host: str
 
 
-class BleConfig(BaseModel):
+class BleDeviceConfig(BaseModel):
     mac: str
     address: str
     uuid_read: str
     uuid_write: str
+    sensor_type: SensorType
+    location: SensorLocation
     
-class BleDevices(BaseModel):
-    tp357: BleConfig
-    oria: BleConfig
+    @property
+    def class_name(self):
+        return f"{self.sensor_type}{camelcase(self.address)}"
+    
     
 class DbConfig(BaseModel):
     name: str
@@ -37,7 +43,7 @@ class DbConfig(BaseModel):
 class AppConfig(BaseModel):
     lametric: LametricConfig
     firebase: FirebaseConfig
-    ble: BleDevices
+    devices: list[BleDeviceConfig]
     db: DbConfig
 
 

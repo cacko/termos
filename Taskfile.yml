@@ -14,7 +14,7 @@ tasks:
   logs:
     desc: logs
     cmds:
-      - pm2 logs {{.PROJECT}} 
+      - tail -f ~/Library/Logs/net.cacko.termoservice/termosvc.log 
 
   export:
     desc: export env

@@ -4,7 +4,8 @@ from queue import Empty, Queue
 from time import sleep
 from corethread import StoppableThread
 
-from termo_service.ble.models import NowData, SensorLocation, Status, StatusChange
+from termo_service.ble.models import NowData, SensorLocation, SensorType, Status, StatusChange
+from termo_service.ble.sensor import SensorMeta
 from termo_service.ble.tp357 import TP357
 from termo_service.ble.oria import Oria
 from termo_service.db.models.data import Data
@@ -29,10 +30,10 @@ class Server(StoppableThread):
         asyncio.run(Lametric.update(self.current_data[SensorLocation.INDOOR]))
         while not self.stopped():
             try:
-                payload = self.queue.get_nowait()
+                payload, sender = self.queue.get_nowait()
                 match payload:
                     case StatusChange():
-                        self.on_status(payload)
+                        self.on_status(payload, sender)
                     case NowData():
                         self.store_data(payload)
                 self.queue.task_done()
@@ -41,12 +42,12 @@ class Server(StoppableThread):
                 sleep(0.2)
         logging.info("STOPPING SERVER")
 
-    def on_status(self, status: StatusChange):
+    def on_status(self, status: StatusChange, sender: SensorMeta):
         asyncio.run(manager.broadcast(status.model_dump(mode="json")))
         match status.status:
             case Status.DISCONNECTED:
-                self.__on_disconnect(status)
-
+                sender.stop_notify()
+                sender.restart_notify()
             case _:
                 pass
 
@@ -62,13 +63,3 @@ class Server(StoppableThread):
             asyncio.run(manager.broadcast(data.model_dump(mode="json")))
             asyncio.run(Lametric.update(data))
             NowdataDb().nowdata(**data.model_dump(mode="json"))
-
-
-    def __on_disconnect(self, status: StatusChange):
-        match status.location:
-            case SensorLocation.OUTDOOR:
-                Oria.stop_notify()
-                Oria.restart_notify()
-            case SensorLocation.INDOOR:
-                TP357.stop_notify()
-                TP357.restart_notify()
