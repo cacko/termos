@@ -69,4 +69,3 @@ class TP357(Sensor):
                     logging.exception(e)
                     await client.stop_notify(read)
             await client.disconnect()
-            logging.info(f"STOPPING TP {self.address} {self.location}")

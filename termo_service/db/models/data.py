@@ -70,7 +70,6 @@ class Data(DbModel):
             .order_by(timestamp.asc())
             .dicts()
         )
-        logging.info([x for x in query])
         return [DataResponse(**r) for r in query]
 
     def to_response(self, **kwds):

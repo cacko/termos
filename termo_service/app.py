@@ -51,7 +51,6 @@ async def lifespan(app: FastAPI):
     for sensor in sensors:
         sensor.start_notify()
     yield
-    logging.info("lifespan")
     raise RuntimeError
 
 

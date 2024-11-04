@@ -4,10 +4,8 @@ from queue import Empty, Queue
 from time import sleep
 from corethread import StoppableThread
 
-from termo_service.ble.models import NowData, SensorLocation, SensorType, Status, StatusChange
+from termo_service.ble.models import NowData, SensorLocation, Status, StatusChange
 from termo_service.ble.sensor import SensorMeta
-from termo_service.ble.tp357 import TP357
-from termo_service.ble.oria import Oria
 from termo_service.db.models.data import Data
 from termo_service.firebase.db import NowdataDb
 from termo_service.lametric import Lametric

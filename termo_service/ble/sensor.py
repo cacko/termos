@@ -56,7 +56,7 @@ class SensorMeta(type):
         try:
             assert cls.notifiers[cls.__name__]
             assert cls.notifiers[cls.__name__].cancel()
-            logging.info(f"STOP NOTIFY")
+            logging.info(f"STOP NOTIFY {cls.__name__}")
         except AssertionError:
             pass
 

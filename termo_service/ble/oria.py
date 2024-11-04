@@ -28,7 +28,6 @@ def convert_to_readings(response):
         if reading > 2048:
             reading = -1 * (4096 - reading)
         readings.append("{:.2f}".format(reading))
-    print(",".join(readings))
 
 
 class Oria(Sensor):

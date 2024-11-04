@@ -8,7 +8,6 @@ class NowdataDb(object):
         return db.reference(f"termo/")
 
     def nowdata(self, **kwds):
-        print(kwds)
         child_node = "_".join([kwds.get("model"), kwds.get("location")])
         options_ref = self.root_ref.child(child_node)
         return options_ref.set(kwds)
