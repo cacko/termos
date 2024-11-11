@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from time import sleep
 from fastapi import FastAPI
@@ -48,8 +49,7 @@ for dc in app_config.devices:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     server.start()
-    for sensor in sensors:
-        sensor.start_notify()
+    await asyncio.gather(*[sensor.start_notify() for sensor in sensors])
     yield
     raise RuntimeError
 
