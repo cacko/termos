@@ -2,13 +2,12 @@ import asyncio
 import logging
 from time import sleep
 from fastapi import FastAPI
+from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
-import rich
 from termo_service.api.router import router as api_router
 from termo_service.ble import get_sensor_type_class
-from termo_service.ble.models import SensorLocation, SensorType
 from termo_service.ws.router import router as ws_router
-from termo_service.ble.sensor import Sensor, SensorMeta
+from termo_service.ble.sensor import SensorMeta
 from termo_service.server import Server
 from termo_service.config import app_config
 from contextlib import asynccontextmanager
@@ -49,7 +48,10 @@ for dc in app_config.devices:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     server.start()
-    await asyncio.gather(*[sensor.start_notify() for sensor in sensors])
+    
+    async def start_notifiers():
+        await asyncio.gather(*[sensor.start_notify() for sensor in sensors])
+    run_in_threadpool(start_notifiers)
     yield
     raise RuntimeError
 
