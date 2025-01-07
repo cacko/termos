@@ -90,4 +90,4 @@ class Data(DbModel):
         database = Database.db
         table_name = "tempo_data"
         order_by = ["-timestamp"]
-        indexes = ((("timestamp",), True),)
+        indexes = ((("timestamp","location"), True),)
