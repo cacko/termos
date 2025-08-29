@@ -4,6 +4,8 @@ version: '3'
 
 vars:
   PROJECT: termo-service
+  ENTRY: src/termos.py
+  APP: termos
 
 tasks:
   default:
@@ -51,3 +53,10 @@ tasks:
     dir: $WORKDIR
     cmds:
       - ./run.sh
+
+  build:
+    desc: build app
+    cmds:
+      - rm -rf {{.APP}}.build
+      - rm -rf {{.APP}}.dist
+      - mamba run -n {{.PROJECT}} python -m nuitka {{.ENTRY}}
