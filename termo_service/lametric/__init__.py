@@ -32,4 +32,4 @@ class Lametric(object, metaclass=LametricMeta):
                 r = await client.post(endpoint, **kwds)
                 await r.aclose()
         except Exception as e:
-            logging.exception(e)
+            logging.error(e)

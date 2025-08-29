@@ -8,7 +8,7 @@ vars:
 tasks:
   default:
     cmds:
-      - direnv exec . mamba run --live-stream -n termo-service python -m 'termo_service.cli' {{.CLI_ARGS}}
+      - direnv exec . mamba run -n termo-service python -m 'termo_service.cli' {{.CLI_ARGS}}
     silent: true
 
   logs:

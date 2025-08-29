@@ -18,13 +18,13 @@
 	</array>
 	<key>RunAtLoad</key>
 	<true/>
+	<key>UserName</key>
+	<string>Alex</string>
+	<key>WorkingDirectory</key>
+	<string>/Users/jago/Code/termo-service</string>
 	<key>StandardErrorPath</key>
 	<string>/Users/jago/Library/Logs/net.cacko.termoservice/termosvc.log</string>
 	<key>StandardOutPath</key>
 	<string>/Users/jago/Library/Logs/net.cacko.termoservice/termosvc.log</string>
-	<key>WorkingDirectory</key>
-	<string>/Users/jago/Code/termo-service</string>
-	<key>UserName</key>
-	<string>Alex</string>
 </dict>
 </plist>
