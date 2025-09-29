@@ -3,7 +3,7 @@
 version: '3'
 
 vars:
-  PROJECT: termo-service
+  PROJECT: termos
   ENTRY: src/termos.py
   APP: termos
   WORKDIR: src/
@@ -11,7 +11,7 @@ vars:
 tasks:
   default:
     cmds:
-      - direnv exec . mamba run -n termo-service python -m 'termo_service.cli' {{.CLI_ARGS}}
+      - direnv exec . mamba run -n {{.PROJECT}} python -m {{.ENTRY}} {{.CLI_ARGS}}
     silent: true
 
   logs:
