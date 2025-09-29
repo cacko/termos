@@ -1,7 +1,4 @@
-from pathlib import Path
-from typing import Optional
 import os
-from osascript import osascript
 from termos.config import DATA_DIR
 from termos import __name__
 
@@ -16,13 +13,3 @@ def check_pid():
         return True
     except (AssertionError, ValueError, OSError):
         return False
-
-
-def show_alert(msg: str, title: Optional[str] = None):
-    if not title:
-        title = __name__
-    icon_path = Path(__file__).parent / "icon.png"
-    script = f'display dialog "{msg}" '
-    f'with icon posix file "{icon_path.as_posix()}" '
-    'buttons {"OK"} default button 1 '
-    osascript.osascript(script)

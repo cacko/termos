@@ -29,7 +29,7 @@ class DatabaseMeta(type):
 class Database(object, metaclass=DatabaseMeta):
 
     def __init__(self):
-        self.__db = ReconnectingDB(*parse(app_config.db.url))
+        self.__db = ReconnectingDB(**parse(app_config.db.url))
 
     def get_db(self) -> ReconnectingDB:
         return self.__db
