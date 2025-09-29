@@ -57,10 +57,8 @@ tasks:
   pp:
     desc: push and pull
     cmds:
-      - git add .  || true
-      - gcom || true
-      - git push || true
-      - git pull || true
+      - task: push
+      - task: pull
 
   run:
     desc: run
