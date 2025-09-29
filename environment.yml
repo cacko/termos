@@ -20,6 +20,7 @@ dependencies:
   - tk=8.6.13
   - tzdata=2025b
   - pip:
+    - Nuitka==2.7.13
     - PyYAML==6.0.2
     - appdirs==1.4.4
     - bleak==1.1.0
@@ -30,10 +31,13 @@ dependencies:
     - fastapi==0.116.1
     - firebase_admin==7.1.0
     - humanfriendly==10.0
+    - imageio==2.37.0
+    - osascript==2020.12.3
     - peewee==3.18.2
     - psutil==7.0.0
     - psycopg2==2.9.10
     - psycopg2-binary==2.9.10
+    - rumps==11.1.1
     - typer==0.16.1
     - uvicorn==0.35.0
     - uvloop==0.21.0

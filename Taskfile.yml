@@ -6,6 +6,7 @@ vars:
   PROJECT: termo-service
   ENTRY: src/termos.py
   APP: termos
+  WORKDIR: src/
 
 tasks:
   default:
@@ -49,10 +50,10 @@ tasks:
       - git push || true
 
   run:
-    desc: systemd exec
+    desc: run
     dir: $WORKDIR
     cmds:
-      - ./run.sh
+      - mamba run -n {{.PROJECT}} python {{.ENTRY}}
 
   build:
     desc: build app

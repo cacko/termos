@@ -70,6 +70,7 @@ class Oria(Sensor):
                     humid=msg.data[0].get("h"),
                     location=self.location,
                 )
+                logging.info(f"New data: {nowdata.temp}°C, {nowdata.humid}%, {self.__class__}")
                 self.__class__.queue.put_nowait((nowdata, self.__class__))
 
     def disconnect_oria(self, client: BleakClient):
