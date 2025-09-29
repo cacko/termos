@@ -11,7 +11,7 @@ vars:
 tasks:
   default:
     cmds:
-      - direnv exec . mamba run -n {{.PROJECT}} python -m {{.ENTRY}} {{.CLI_ARGS}}
+      - direnv exec . mamba run -n {{.PROJECT}} python {{.ENTRY}} {{.CLI_ARGS}}
     silent: true
 
   logs:
@@ -48,6 +48,19 @@ tasks:
       - git add .  || true
       - gcom || true
       - git push || true
+
+  pull:
+    desc: pulls from git
+    cmds:
+      - ssh $REMOTE_HOST 'source ~/.zshrc;cd /var/www/{{.PROJECT}};git reset --hard;git pull'
+
+  pp:
+    desc: push and pull
+    cmds:
+      - git add .  || true
+      - gcom || true
+      - git push || true
+      - git pull || true
 
   run:
     desc: run
