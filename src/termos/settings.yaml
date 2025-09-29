@@ -8,9 +8,7 @@ firebase:
   admin_json: /Volumes/Devo/Code/termo-4737a-firebase-adminsdk-9nxg7-2c9a5f303e.json
   rdb_host: https://termo-4737a-default-rtdb.europe-west1.firebasedatabase.app/
 db:
-  name: termo
-  host: 192.168.0.10
-  username: jago
+  url: postgres://jago@192.168.0.10:5432/termo
 devices:
   # -
   #   mac: c4:5a:11:b4:53:19

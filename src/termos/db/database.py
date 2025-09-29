@@ -2,6 +2,7 @@ from peewee import PostgresqlDatabase
 from playhouse.shortcuts import ReconnectMixin, OperationalError, InterfaceError
 from typing import Optional
 from termos.config import app_config
+from playhouse.db_url import parse
 
 
 class ReconnectingDB(ReconnectMixin, PostgresqlDatabase):
@@ -28,10 +29,7 @@ class DatabaseMeta(type):
 class Database(object, metaclass=DatabaseMeta):
 
     def __init__(self):
-        cfg = app_config.db
-        self.__db = ReconnectingDB(
-            cfg.name, user=cfg.username, hostaddr=cfg.host, sslmode="disable"
-        )
+        self.__db = ReconnectingDB(*parse(app_config.db.url))
 
     def get_db(self) -> ReconnectingDB:
         return self.__db

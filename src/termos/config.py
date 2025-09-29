@@ -44,9 +44,7 @@ class BleDeviceConfig(BaseModel):
     
     
 class DbConfig(BaseModel):
-    name: str
-    username: str
-    host: str
+    url: str
 
 
 class AppConfig(BaseModel):
