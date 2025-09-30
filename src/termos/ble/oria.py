@@ -34,7 +34,6 @@ class Oria(Sensor):
 
     ble_queue: Queue = Queue()
     datapoints_count = 0
-    client: BleakClient = None
 
     @property
     async def device(self) -> BLEDevice:
@@ -82,12 +81,6 @@ class Oria(Sensor):
             )
         )
         
-    def disconnect(self):
-        try:
-            asyncio.run_coroutine_threadsafe(self.client.disconnect(), asyncio.get_event_loop())
-        except Exception as e:
-            logging.exception(e)
-
     async def init_notify(self):
         device = await self.device
         async with BleakClient(
@@ -103,7 +96,6 @@ class Oria(Sensor):
                 )
             )
             logging.info(f"connected to {client.address}")
-            self.client = client
             Oria.ble_queue.put_nowait((TBCmdQuery().get_msg(), 0))
             await client.start_notify(self.uuid_read, callback=self.notification_oria)
             while client.is_connected:

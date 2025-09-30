@@ -7,6 +7,7 @@ from termos.ble.models import SensorLocation
 from termos.db import create_tables
 from termos.db.models.data import Data, PeriodChunk
 import asyncio
+import subprocess
 
 cli = typer.Typer()
 
@@ -29,6 +30,13 @@ def period_indoor(period: Annotated[PeriodChunk, typer.Argument()]):
     
 @cli.command()
 def check(mac: Annotated[str, typer.Argument()]):
+    
+    output = subprocess.run(
+        ["bluetoothctl", "devcies"],
+        capture_output=True,
+        text=True,
+    )
+    print(output)
     async def a_discover():
         device = await BleakScanner.find_device_by_address(mac.upper())
         rich.print([device, device.address])
