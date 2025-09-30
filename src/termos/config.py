@@ -1,6 +1,6 @@
 import os
 import yaml
-from pydantic import BaseModel
+from pydantic import BaseModel, constr
 from pathlib import Path
 from stringcase import camelcase
 from termos.ble.models import SensorLocation, SensorType
@@ -31,8 +31,8 @@ class FirebaseConfig(BaseModel):
 
 
 class BleDeviceConfig(BaseModel):
-    mac: str
-    address: str
+    mac: constr(to_upper=True)
+    address: constr(to_upper=True)
     uuid_read: str
     uuid_write: str
     sensor_type: SensorType
