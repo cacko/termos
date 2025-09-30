@@ -32,7 +32,6 @@ class SensorMeta(type):
 
     def stop(cls):
         try:
-            cls().disconnect()
             cls.stop_notify()
         except Exception:
             pass
@@ -57,3 +56,6 @@ class Sensor(object, metaclass=SensorMeta):
         
     async def init_notify(self):
         raise NotImplementedError
+    
+    def __exit__(self, exc_type, exc_value, traceback):
+        print(f"exit {self.mac} {exc_type} {exc_value} {traceback}")
