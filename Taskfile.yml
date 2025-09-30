@@ -15,9 +15,9 @@ tasks:
     silent: true
 
   logs:
-    desc: logs
+    desc: monitor logs
     cmds:
-      - tail -f ~/Library/Logs/net.cacko.termoservice/termosvc.log 
+      - ssh $REMOTE_HOST 'source ~/.zshrc;journalctl --user-unit {{.PROJECT}} -f --all'
 
   export:
     desc: export env
@@ -60,16 +60,40 @@ tasks:
       - task: push
       - task: pull
 
-  run:
-    dir: src
-    desc: run app
+  exec:
+    desc: run  cli on remote
     cmds:
-      - direnv exec . mamba run -n {{.PROJECT}} python -m {{.PROJECT}}
-    silent: true
+      - ssh $REMOTE_HOST 'source ~/.zshrc;cd /var/www/{{.PROJECT}}/src;mamba run -n {{.PROJECT}} python -m {{.PROJECT}}.cli {{.CLI_ARGS}}'
 
-  build:
-    desc: build app
+  start:
+    desc: start the service
     cmds:
-      - rm -rf {{.APP}}.build
-      - rm -rf {{.APP}}.dist
-      - mamba run -n {{.PROJECT}} python -m nuitka {{.ENTRY}}
+      - ssh $REMOTE_HOST 'source ~/.zshrc;systemctl --user start {{.PROJECT}}'
+
+  stop:
+    desc: stop the server
+    cmds:
+      - ssh $REMOTE_HOST 'source ~/.zshrc;systemctl --user stop {{.PROJECT}}'
+
+  restart:
+    desc: restart the service
+    cmds:
+      - task: stop
+      - ssh $REMOTE_HOST 'source ~/.zshrc;sleep 1'
+      - task: start
+
+  deploy:
+    desc: shortcut for stop -> push -> pull -> restart
+    cmds:
+      - task: stop
+      - task: push
+      - task: pull
+      - task: restart
+
+  run:
+    desc: systemd exec
+    dir: src/
+    cmds:
+      - bluetoothctl power on
+      - direnv exec . mamba run -n {{.PROJECT}} python -m {{.PROJECT}}
+  
