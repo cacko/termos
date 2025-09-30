@@ -11,7 +11,7 @@ tasks:
     dir: src
     desc: run app
     cmds:
-      - direnv exec . mamba run -n {{.PROJECT}} python -m {{.PROJECT}} {{.CLI_ARGS}}
+      - direnv exec . mamba run -n {{.PROJECT}} python -m {{.PROJECT}}.cli {{.CLI_ARGS}}
     silent: true
 
   logs:
