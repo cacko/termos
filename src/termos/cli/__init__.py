@@ -26,6 +26,23 @@ def now_indoor():
 def period_indoor(period: Annotated[PeriodChunk, typer.Argument()]):
     records = Data.get_period(chunk=period, location=SensorLocation.INDOOR)
     rich.print([r.model_dump() for r in records])
+    
+@cli.command()
+def check(mac: Annotated[str, typer.Argument()]):
+    async def a_discover():
+        device = await BleakScanner.find_device_by_address(mac.upper())
+        rich.print([device, device.address])
+        try:
+            async with BleakClient(device) as client:
+                for service in client.services:
+                    for char in service.characteristics:
+                        rich.print(char.properties)
+                        rich.print(char.uuid)
+        except BleakError as e:
+            rich.print(f"BleakError occurred while connecting to {device}: {e}")
+        except asyncio.TimeoutError as e:
+            rich.print(f"Timeout occurred while connecting to {device}: {e}")
+    asyncio.run(a_discover())
                 
 @cli.command()
 def discover():
