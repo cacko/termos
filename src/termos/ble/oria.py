@@ -41,7 +41,7 @@ class Oria(Sensor):
         while not device:
             devices = await BleakScanner.discover()
             device = next(
-                filter(lambda x: x.address == self.address, devices),
+                filter(lambda x: x.address in [self.address, self.mac], devices),
                 None,
             )
         logging.info(f"found device {device.details}")
