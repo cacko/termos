@@ -82,6 +82,8 @@ class Oria(Sensor):
         )
         
     async def init_notify(self):
+        if self.is_connected:
+            self.disconnect()
         device = await self.device
         async with BleakClient(
             device, disconnected_callback=self.disconnect_oria

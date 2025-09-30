@@ -3,7 +3,7 @@ import logging
 from queue import Queue
 from typing import Any
 from termos.ble.models import SensorLocation
-
+import subprocess
 
 class SensorMeta(type):
 
@@ -32,6 +32,7 @@ class SensorMeta(type):
 
     def stop(cls):
         try:
+            cls().disconnect()
             cls.stop_notify()
         except Exception:
             pass
@@ -57,5 +58,18 @@ class Sensor(object, metaclass=SensorMeta):
     async def init_notify(self):
         raise NotImplementedError
     
-    def __exit__(self, exc_type, exc_value, traceback):
-        print(f"exit {self.mac} {exc_type} {exc_value} {traceback}")
+    @property
+    def is_connected(self) -> bool:
+        output = subprocess.run(
+            ["bluetoothctl", "devices"],
+            capture_output=True,
+            text=True,
+        )
+        return self.mac in output.stdout
+    
+    def disconnect(self):
+        subprocess.run(
+            ["bluetoothctl", "disconnect", self.mac],
+            capture_output=False,
+            text=True,
+        )
