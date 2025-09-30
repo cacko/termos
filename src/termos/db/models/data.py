@@ -8,6 +8,7 @@ from termos.db.database import Database
 from peewee import FloatField, DateTimeField, fn
 from playhouse.shortcuts import model_to_dict
 from datetime import timezone, datetime, timedelta
+from playhouse.postgres_ext import DateTimeTZField
 
 
 class PeriodChunk(StrEnum):
@@ -19,7 +20,7 @@ class PeriodChunk(StrEnum):
 class Data(DbModel):
     temp = FloatField()
     humid = FloatField()
-    timestamp = DateTimeField(default=datetime.utcnow)
+    timestamp = DateTimeTZField(default=datetime.utcnow)
     location = LocationField(null=False)
 
     @classmethod
