@@ -5,11 +5,10 @@ version: '3'
 vars:
   PROJECT: termos
   APP: termos
-  SRCDIR: src/
 
 tasks:
   default:
-    dir: $WORKDIR
+    dir: src
     desc: run app
     cmds:
       - direnv exec . mamba run -n {{.PROJECT}} python -m {{.PROJECT}} {{.CLI_ARGS}}
