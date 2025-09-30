@@ -32,14 +32,13 @@ class SensorMeta(type):
 
     def stop(cls):
         try:
-            cls().disconnect()
+            cls().stop_notify()
         except Exception:
             pass
 
     def stop_notify(cls):
         try:
-            assert cls.notifiers[cls.__name__]
-            assert cls.notifiers[cls.__name__].cancel()
+            cls().disconnect()
             logging.info(f"STOP NOTIFY {cls.__name__}")
         except AssertionError:
             pass
