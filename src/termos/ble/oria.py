@@ -64,7 +64,7 @@ class Oria(Sensor):
                 msg = TBMsgDump(data)
                 logging.debug([msg.count, msg.offset, msg.data])
                 Oria.ble_queue.put_nowait((TBCmdReset().get_msg(), 10))
-                Oria.ble_queue.put_nowait((TBCmdQuery().get_msg(), 30))
+                Oria.ble_queue.put_nowait((TBCmdQuery().get_msg(), 60))
                 nowdata = NowData(
                     temp=msg.data[0].get("t"),
                     humid=msg.data[0].get("h"),
