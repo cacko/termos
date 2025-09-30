@@ -34,6 +34,7 @@ class Oria(Sensor):
 
     ble_queue: Queue = Queue()
     datapoints_count = 0
+    client: BleakClient = None
 
     @property
     async def device(self) -> BLEDevice:
