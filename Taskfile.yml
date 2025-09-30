@@ -61,10 +61,11 @@ tasks:
       - task: pull
 
   run:
-    desc: run
-    dir: $WORKDIR
+    dir: src
+    desc: run app
     cmds:
-      - mamba run -n {{.PROJECT}} python {{.ENTRY}}
+      - direnv exec . mamba run -n {{.PROJECT}} python -m {{.PROJECT}}
+    silent: true
 
   build:
     desc: build app
