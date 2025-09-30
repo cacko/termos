@@ -53,11 +53,11 @@ class Server(StoppableThread):
         try:
             assert data.location in self.current_data
             assert self.current_data[data.location] == data
-            logging.debug(f"no change {data} - {self.current_data}")
+            logging.info(f"no change {data} - {self.current_data}")
         except AssertionError:
             self.current_data[data.location] = data
             Data.create(**data.model_dump(exclude=["timestamp"]))
-            logging.debug(data)
+            logging.info(data)
             asyncio.run(manager.broadcast(data.model_dump(mode="json")))
             asyncio.run(Lametric.update(data))
             NowdataDb().nowdata(**data.model_dump(mode="json"))
