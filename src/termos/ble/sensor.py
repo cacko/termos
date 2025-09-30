@@ -32,6 +32,7 @@ class SensorMeta(type):
 
     def stop(cls):
         try:
+            cls().disconnect()
             cls.stop_notify()
         except Exception:
             pass
