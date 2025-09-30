@@ -32,11 +32,17 @@ def period_indoor(period: Annotated[PeriodChunk, typer.Argument()]):
 def check(mac: Annotated[str, typer.Argument()]):
     
     output = subprocess.run(
-        ["bluetoothctl", "devcies"],
+        ["bluetoothctl", "devices"],
         capture_output=True,
         text=True,
     )
-    print(output)
+    if mac.upper() in output.stdout:
+        rich.print(f"Device {mac} is already paired.")
+        subprocess.run(
+            ["bluetoothctl", "disconnect", mac],
+            capture_output=False,
+            text=True,
+        )
     async def a_discover():
         device = await BleakScanner.find_device_by_address(mac.upper())
         rich.print([device, device.address])
