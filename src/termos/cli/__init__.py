@@ -32,7 +32,7 @@ def discover():
     async def a_discover():
         devices = await BleakScanner.discover(return_adv=True)
         for device, adv in devices.values():
-            rich.print([device, adv])
+            rich.print([device, adv, device.address])
             try:
                 async with BleakClient(device) as client:
                     for service in client.services:
