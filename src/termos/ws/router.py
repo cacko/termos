@@ -8,7 +8,7 @@ from fastapi.websockets import WebSocketState
 import asyncio
 from asyncio.queues import Queue, QueueEmpty
 
-from termos.ble.models import NowData, SensorLocation
+from termos.sensor.models import NowData, SensorLocation
 from termos.db.models.data import Data
 
 

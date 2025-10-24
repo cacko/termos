@@ -3,7 +3,7 @@ import yaml
 from pydantic import BaseModel, constr
 from pathlib import Path
 from stringcase import camelcase
-from termos.ble.models import SensorLocation, SensorType
+from termos.sensor.models import SensorLocation, SensorType
 from pathlib import Path
 from appdirs import user_data_dir, user_config_dir
 from termos import __name__

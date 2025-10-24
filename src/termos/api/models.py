@@ -2,7 +2,7 @@ from typing import Optional
 from pydantic import BaseModel, AwareDatetime
 from datetime import datetime, timezone
 
-from termos.ble.models import SensorLocation
+from termos.sensor.models import SensorLocation
 
 
 class BaseResponse(BaseModel):

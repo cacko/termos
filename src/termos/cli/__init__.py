@@ -3,7 +3,7 @@ from bleak.exc import BleakError
 from typing_extensions import Annotated
 import rich
 import typer
-from termos.ble.models import SensorLocation
+from termos.sensor.models import SensorLocation
 from termos.db import create_tables
 from termos.db.models.data import Data, PeriodChunk
 import asyncio

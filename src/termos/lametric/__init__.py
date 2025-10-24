@@ -3,7 +3,7 @@ from typing import Optional
 import httpx
 from httpx_retries import RetryTransport, Retry
 from termos.config import LametricConfig, app_config
-from termos.ble.models import NowData
+from termos.sensor.models import NowData
 
 config: LametricConfig = app_config.lametric
 

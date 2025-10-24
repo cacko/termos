@@ -2,7 +2,7 @@ import asyncio
 import logging
 from queue import Queue
 from typing import Any
-from termos.ble.models import SensorLocation
+from termos.sensor.models import SensorLocation
 import subprocess
 
 class SensorMeta(type):

@@ -1,8 +1,8 @@
 import asyncio
 import logging
 from asyncio import Queue
-from termos.ble.sensor import Sensor
-from termos.ble.models import NowData
+from termos.sensor.sensor import Sensor
+from termos.sensor.models import NowData
 import httpx
 from httpx_retries import RetryTransport, Retry
 

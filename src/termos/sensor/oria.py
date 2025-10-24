@@ -4,9 +4,9 @@ from asyncio import Queue, QueueEmpty
 from bleak import BleakClient
 from bleak.backends.device import BLEDevice
 from bleak import BleakScanner
-from termos.ble.sensor import Sensor
-from termos.ble.models import NowData, Status, StatusChange
-from termos.ble.oria_protocol import (
+from termos.sensor.sensor import Sensor
+from termos.sensor.models import NowData, Status, StatusChange
+from termos.sensor.oria_protocol import (
     TBCmdQuery,
     TBCmdReset,
     TBMsgQuery,

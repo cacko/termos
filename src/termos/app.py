@@ -4,9 +4,9 @@ from time import sleep
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from termos.api.router import router as api_router
-from termos.ble import get_sensor_type_class
+from termos.sensor import get_sensor_type_class
 from termos.ws.router import router as ws_router
-from termos.ble.sensor import SensorMeta
+from termos.sensor.sensor import SensorMeta
 from termos.server import Server
 from termos.config import app_config
 from contextlib import asynccontextmanager

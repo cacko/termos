@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Path, HTTPException
 from typing import Annotated
 from termos.api.models import DataResponse
-from termos.ble.models import SensorLocation
+from termos.sensor.models import SensorLocation
 from termos.db.models.data import Data, PeriodChunk
 from termos.api.auth import check_auth
 

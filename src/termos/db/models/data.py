@@ -1,7 +1,7 @@
 from enum import StrEnum
 import logging
 from termos.api.models import DataResponse
-from termos.ble.models import SensorLocation
+from termos.sensor.models import SensorLocation
 from termos.db.fields import LocationField
 from .base import DbModel
 from termos.db.database import Database

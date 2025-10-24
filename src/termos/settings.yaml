@@ -11,7 +11,7 @@ db:
   url: postgres://jago@192.168.0.10:5432/termo
 devices:
   -
-    mac: 44532
+    mac: "44532"
     address: 192.168.0.106
     sensor_type: http
     location: indoor

@@ -1,5 +1,5 @@
 from peewee import CharField
-from termos.ble.models import SensorLocation
+from termos.sensor.models import SensorLocation
 
 
 class LocationField(CharField):

@@ -4,8 +4,8 @@ from bleak import BleakClient
 from bleak.backends.device import BLEDevice
 from bleak.backends.characteristic import BleakGATTCharacteristic
 from bleak import BleakScanner
-from termos.ble.sensor import Sensor
-from termos.ble.models import NowData, SensorLocation, Status, StatusChange
+from termos.sensor.sensor import Sensor
+from termos.sensor.models import NowData, SensorLocation, Status, StatusChange
 
 
 def tp357_result(data: bytearray, location: SensorLocation):
