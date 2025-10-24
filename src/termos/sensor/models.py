@@ -31,9 +31,9 @@ class StatusChange(BaseModel):
 
 class NowData(BaseModel):
     temp: float
-    humid: float
     location: SensorLocation
     timestamp: Optional[datetime] = None
+    humid: Optional[float] = None
     model: str = Field(default="now_data")
 
     def __init__(self, **kwds):

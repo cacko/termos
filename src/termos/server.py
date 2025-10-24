@@ -21,6 +21,9 @@ class Server(StoppableThread):
         self.current_data[SensorLocation.INDOOR] = NowData(
             **Data.get_last_data(location=SensorLocation.INDOOR).model_dump()
         )
+        self.current_data[SensorLocation.OUTDOOR] = NowData(
+            **Data.get_last_data(location=SensorLocation.OUTDOOR).model_dump()
+        )
         super().__init__(*args, **kwargs)
 
     def run(self):
