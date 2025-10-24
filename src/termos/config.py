@@ -7,6 +7,7 @@ from termos.ble.models import SensorLocation, SensorType
 from pathlib import Path
 from appdirs import user_data_dir, user_config_dir
 from termos import __name__
+from typing import Optional
 
 DATA_DIR = Path(user_data_dir(__name__))
 CONFIG_DIR = Path(user_config_dir(__name__))
@@ -33,10 +34,10 @@ class FirebaseConfig(BaseModel):
 class BleDeviceConfig(BaseModel):
     mac: constr(to_upper=True)
     address: constr(to_upper=True)
-    uuid_read: str
-    uuid_write: str
     sensor_type: SensorType
     location: SensorLocation
+    uuid_read: Optional[str] = None
+    uuid_write: Optional[str] = None
     
     @property
     def class_name(self):

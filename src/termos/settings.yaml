@@ -10,13 +10,12 @@ firebase:
 db:
   url: postgres://jago@192.168.0.10:5432/termo
 devices:
-  # -
-  #   mac: c4:5a:11:b4:53:19
-  #   address: E18B152D-E13D-4FB6-B1F6-72C620625F27
-  #   uuid_write: 00010203-0405-0607-0809-0a0b0c0d2b11
-  #   uuid_read: 00010203-0405-0607-0809-0a0b0c0d2b10
-  #   sensor_type: tp357
-  #   location: indoor
+  -
+    mac: 44532
+    address: 192.168.0.106
+    sensor_type: http
+    location: indoor
+    uuid_read: /api/now
   -
     mac: 50:4a:00:00:12:f3
     address: 58F19AD0-673B-9EB5-FD85-05084DBFF00F

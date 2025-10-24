@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 class SensorType(StrEnum):
     TP357 = "tp357"
     ORIA = "oria"
+    HTTP = "http"
 
 class Status(StrEnum):
     CONNECTED = "connected"
