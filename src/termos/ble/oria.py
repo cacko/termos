@@ -39,7 +39,11 @@ class Oria(Sensor):
     async def device(self) -> BLEDevice:
         device: BLEDevice = None
         while not device:
-            device = await BleakScanner.find_device_by_address(self.mac)
+            devices = await BleakScanner.discover()
+            device = next(
+                filter(lambda x: x.address == self.mac, devices),
+                None,
+            )
         logging.info(f"found device {device.details}")
         return device
 
