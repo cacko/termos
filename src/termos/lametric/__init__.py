@@ -1,6 +1,7 @@
 import logging
 from typing import Optional
 import httpx
+from httpx_retries import RetryTransport, Retry
 from termos.config import LametricConfig, app_config
 from termos.ble.models import NowData
 
@@ -25,9 +26,12 @@ class LametricMeta(type):
 class Lametric(object, metaclass=LametricMeta):
 
     async def post_data(self, endpoint, **kwds):
+        retry = Retry(total=50000, backoff_factor=0.5)
         try:
             async with httpx.AsyncClient(
-                headers=config.headers, base_url=config.base_url
+                headers=config.headers,
+                base_url=config.base_url,
+                transport=RetryTransport(retry=retry),
             ) as client:
                 r = await client.post(endpoint, **kwds)
                 await r.aclose()
