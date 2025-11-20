@@ -12,7 +12,7 @@ db:
 devices:
   -
     mac: "44532"
-    address: 192.168.0.106
+    address: 192.168.16.106
     sensor_type: http
     location: indoor
     uuid_read: /api/now
@@ -22,11 +22,11 @@ devices:
     uuid_write: 0000fff5-0000-1000-8000-00805F9B34FB
     uuid_read: 0000fff3-0000-1000-8000-00805F9B34FB
     sensor_type: oria
-    location: outdoor
+    location: indoor
   -
     mac: 50:7e:00:00:06:1c
     address: 69733674-301D-62BA-1C48-F4CCAD3F769C
     uuid_write: 0000fff5-0000-1000-8000-00805F9B34FB
     uuid_read: 0000fff3-0000-1000-8000-00805F9B34FB
     sensor_type: oria
-    location: indoor
+    location: outdoor
