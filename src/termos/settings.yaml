@@ -1,14 +1,14 @@
 lametric:
   headers:
     x-device: 64.2.A.2.103
-  base_url: http://192.168.0.105:32321/api/
+  base_url: http://192.168.16.105:32321/api/
   endpoints:
     nowdata: termo
 firebase:
   admin_json: /Volumes/Devo/Code/termo-4737a-firebase-adminsdk-9nxg7-2c9a5f303e.json
   rdb_host: https://termo-4737a-default-rtdb.europe-west1.firebasedatabase.app/
 db:
-  url: postgres://jago@192.168.0.10:5432/termo
+  url: postgres://jago@192.168.16.10:5432/termo
 devices:
   -
     mac: "44532"
