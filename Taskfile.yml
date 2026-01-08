@@ -95,5 +95,5 @@ tasks:
     dir: src/
     cmds:
       - bluetoothctl power on
-      - direnv exec . mamba run -n {{.PROJECT}} python -m {{.PROJECT}}
+      - direnv exec . conda run -n {{.PROJECT}} python -m {{.PROJECT}}
   
