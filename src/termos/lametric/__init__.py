@@ -36,5 +36,5 @@ class Lametric(object, metaclass=LametricMeta):
                 r = await client.post(endpoint, **kwds)
                 await r.aclose()
         except Exception as e:
-            logging.error("failed to connect to LaMetric {endpoint}")
+            logging.error(f"failed to connect to LaMetric {endpoint}")
             logging.error(e)
